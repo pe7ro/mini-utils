@@ -63,13 +63,10 @@ class App:
         tag = re.sub(r'[./?<>\\:*|"\'\[\]{}]', '_', tag)
         tag = re.sub(r'_+', '_', tag)
         filename = pathlib.Path(f"{tag}.md")
-        print(filename.absolute())
-        # filename.wr
         with filename.open("a") as file:
             file.write(f"\n\n---\n### {timestamp}\n\n{text}\n\n")
 
-        logging.info(f'Appended to {filename}, len={len(text)}')
-        # self.tag_entry.delete(0, tk.END)
+        logging.info(f'Appended to {filename.absolute()}, len={len(text)}')
         self.text_entry.delete("1.0", tk.END)
 
 
