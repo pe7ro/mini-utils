@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# import pathlib
 import sys
 import datetime
 import collections
@@ -19,7 +18,7 @@ def main(hours_offest=None):
     WIDTH = 400
     HEIGHT = 240
     pygame.init()
-    screen = pygame.display.set_mode((WIDTH, HEIGHT), )  # pygame.NOFRAME
+    screen = pygame.display.set_mode((WIDTH, HEIGHT), )  # pygame.NOFRAME, vsync=False
     pygame.display.set_caption('peeper')
     running = True
 
@@ -37,7 +36,7 @@ def main(hours_offest=None):
 
     cpu_usage_queue = collections.deque(maxlen=20)
     i = 0
-    state = 0
+    state = -1
     clock = pygame.time.Clock()
     while running:
         i += 1
@@ -55,15 +54,17 @@ def main(hours_offest=None):
         # screen.blit()
         # no AA, no transparancy, normal
         dt = datetime.datetime.now(tzinfo)
-        if dt.minute % 15 == 0 and state == 0:
-            state = 1
-            bg = main_colors['bgr']
-            fg = main_colors['bg']
-            sound.play()
-        elif dt.minute % 15 != 0:
-            state = 0
-            bg = main_colors['bg']
-            fg = main_colors['fg']
+        if dt.minute % 15 == 0:
+            if state != 1:
+                state = 1
+                bg = main_colors['bgr']
+                fg = main_colors['bg']
+                sound.play()
+        else:
+            if state != 0:
+                state = 0
+                bg = main_colors['bg']
+                fg = main_colors['fg']
 
         screen.fill(bg)
         text = '{:02}:{:02}:{:02}'.format(dt.hour, dt.minute, dt.second)
@@ -77,6 +78,7 @@ def main(hours_offest=None):
         ram_usage = ram.percent
         ram_cached = ram.cached / ram.total * 100
         cpu_bar_width = cpu_usage * perwid
+
         pygame.draw.rect(screen, cpu_color, (0, HEIGHT - bar_height * 2, cpu_bar_width, bar_height))
         ram_bar_width = ram_usage * perwid, ram_cached * perwid
         pygame.draw.rect(screen, ram_color[0], (0, HEIGHT - bar_height * 1, ram_bar_width[0], bar_height))

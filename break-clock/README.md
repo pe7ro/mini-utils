@@ -4,6 +4,34 @@
 
 Peeper is a simple Python application that displays a digital clock along with CPU and RAM usage bars. It also plays a sound every 15 minutes to remind the user of the time. The application is built using the Pygame library and is designed to run on both Linux and Windows.
 
+## Variants
+
+There are 3 implementations using different libraries, you can choose the one you prefer.
+
+- pygame:
+  - cannot change the window position (dragging) and as a result it may be less convenient to move the window around
+  - cannot set "always on top"
+  - easiest audio support out of the box
+- pyglet
+  - reversed Y axis 
+  - cpu usage seems to be the highest
+  - smoothest window dragging out of 3
+  - cannot set "always on top"
+  - can play oga files wish some hacks (gstreamer) but does not see ffmpeg
+- kivy
+  - reversed Y axis 
+  - the most confusing wiki and architecture
+  - lowest cpu usage
+  - window dragging can(?) be improved
+  - needs absolute paths for fonts (?)
+  - ESC closes the app by default but can be changed
+  - freezes when given 'oga' file, but works ok if renamed to 'ogg'
+- tkinter (pyglet for audio)
+  - surprisingly straightforward to implement (maybe lacking documentation though)
+  - smooth dragging
+  - low cpu usage
+
+
 ## Features
 
 - Digital clock display
@@ -14,8 +42,8 @@ Peeper is a simple Python application that displays a digital clock along with C
 ## Requirements
 
 - Python 3.6 or higher
-- Pygame library
 - Psutil library
+- Pygame / pyglet / kivy library
 
 ## Installation
 
