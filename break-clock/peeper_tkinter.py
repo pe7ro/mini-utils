@@ -3,6 +3,7 @@
 import collections
 import logging
 import pathlib
+import time
 import tkinter as tk
 import datetime
 
@@ -25,8 +26,7 @@ class PeeperApp:
         # self.root.attributes('-topmost', True)  # Always on top
         self.root.wm_attributes('-topmost', True)
         self.root.wm_attributes('-type', 'splash') # borderless but can have focus (to handle keyboard)
-        # self.root.attributes('-transparentcolor', True)  # Optional: make the window transparent
-        self.main_colors = ('#202020', '#dddddd', '#dd0000')
+        self.main_colors = ('#222222', '#dddddd', '#dd0000')
         self.bars_colors = ('#005533', '#aa0000', '#552211')
         self.bar_height = 5
         self.cpu_usage_queue = collections.deque(maxlen=20)
@@ -42,25 +42,18 @@ class PeeperApp:
         self.time_label = tk.Label(self.root, font=('FreeSans', 42, 'bold'), text="Centered Label", bg=self.root.cget("bg"))
         self.time_label.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.canvas.bind('<B1-Motion>', self.drag)
-        self.canvas.bind('<Button-1>', self.click)
-        self.time_label.bind('<B1-Motion>', self.drag)
-        self.time_label.bind('<Button-1>', self.click)
+        self.canvas.bind('<B1-Motion>', self.move_window)
+        self.canvas.bind('<Button-1>', self.move_window)
+        self.time_label.bind('<B1-Motion>', self.move_window)
+        self.time_label.bind('<Button-1>', self.move_window)
 
+        self.last_update_second = 0
         self.update()
 
-
-    def click(self, event):
+    def move_window(self, event):
         # print(event)
-        x = event.x_root - self.size[0] // 2
-        y = event.y_root - self.size[1] // 2
-        self.root.geometry(f'{x:+}{y:+}')
-
-
-    def drag(self, event):
-        # print(event)
-        x = event.x_root - self.size[0] // 2
-        y = event.y_root - self.size[1] // 2
+        x = max(0, event.x_root - self.size[0] // 2)
+        y = max(0, event.y_root - self.size[1] // 2)
         self.root.geometry(f'{x:+}{y:+}')
 
 
@@ -94,7 +87,13 @@ class PeeperApp:
         self.canvas.create_rectangle(0, self.size[1] - self.bar_height * 2, cpu_bar_width, self.size[1] - self.bar_height, fill=self.bars_colors[0], width=0)
         self.canvas.create_rectangle(0, self.size[1] - self.bar_height, ram_bar_width[0], self.size[1], fill=self.bars_colors[1], width=0)
         self.canvas.create_rectangle(ram_bar_width[0], self.size[1] - self.bar_height, sum(ram_bar_width), self.size[1], fill=self.bars_colors[2], width=0)
-        self.root.after(100, self.update)
+
+        ct = time.time_ns()
+        ctm = ct // 1_000_000
+        if self.last_update_second + 1 < ctm // 1000:
+            self.root.after(100, self.update)
+        else:
+            self.root.after(1000 - (ctm % 1000), self.update)
 
 
 def configure_logging(log_file=None, level=logging.INFO):
@@ -118,6 +117,6 @@ def configure_logging(log_file=None, level=logging.INFO):
 
 if __name__ == "__main__":
     configure_logging(level=logging.INFO)
-    root = tk.Tk()
-    app = PeeperApp(root)
-    root.mainloop()
+    window = tk.Tk()
+    app = PeeperApp(window)
+    window.mainloop()
