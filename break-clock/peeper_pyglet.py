@@ -14,7 +14,7 @@ def main(hours_offest=None):
     tzinfo = datetime.timezone(datetime.timedelta(hours=hours_offest)) if hours_offest is not None else None
     cpu_color = (0, 80, 40, 255)  # CPU usage color
     ram_color = (160, 0, 0, 255), (90, 20, 10, 255)  # RAM usage color
-    bar_height = 4
+    bar_height = 5
 
     WIDTH = 400
     HEIGHT = 240

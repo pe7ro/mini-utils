@@ -14,13 +14,12 @@ def main(hours_offest=None):
     cpu_color = (0, 80, 40)  # CPU usage color
     ram_color = (160, 0, 0), (90, 20, 10)  # RAM usage color
     bar_height = 4
-
     WIDTH = 400
     HEIGHT = 240
+
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT), )  # pygame.NOFRAME, vsync=False
     pygame.display.set_caption('peeper')
-    running = True
 
     pygame.mixer.init()
     if sys.platform == 'linux':
@@ -30,26 +29,22 @@ def main(hours_offest=None):
         sound = pygame.mixer.Sound('C:/Windows/Media/chimes.wav')
 
     main_colors = {'fg': [222, 222, 222], 'bg': [32, 32, 32], 'bgr': [222, 0, 0], }
-    font = pygame.font.Font(None, 80)
+    # font = pygame.font.Font(None, 80, )
+    font = pygame.font.SysFont('FreeSans', 54, bold=True)
     # font = pathlib.Path('/usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf')
     # font = pygame.font.Font(font if font.exists() else None, 80)
 
     cpu_usage_queue = collections.deque(maxlen=20)
-    i = 0
     state = -1
     clock = pygame.time.Clock()
-    while running:
-        i += 1
-        # time.sleep(1)
+    while True:
         pressed_keys = pygame.key.get_pressed()
         if pressed_keys[pygame.K_x]:
             logging.info('pressed x => quit')
-            running = False
             return
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 logging.info('window closed')
-                running = False
                 return
         # screen.blit()
         # no AA, no transparancy, normal

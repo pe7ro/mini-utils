@@ -3,9 +3,9 @@
 import collections
 import logging
 import pathlib
+import datetime
 import time
 import tkinter as tk
-import datetime
 
 import psutil
 import pyglet
@@ -32,13 +32,15 @@ class PeeperApp:
         self.cpu_usage_queue = collections.deque(maxlen=20)
         self.i = 0
         self.state = -1
+        self.last_update_second = 0
+
         class MyMediaDecoder(GStreamerDecoder):
             def get_file_extensions(self):
                 return super().get_file_extensions() + ('.oga',)
         self.sound = pyglet.media.load('/usr/share/sounds/freedesktop/stereo/service-login.oga', streaming=False, decoder=MyMediaDecoder())
+
         self.canvas = tk.Canvas(self.root, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
-
         self.time_label = tk.Label(self.root, font=('FreeSans', 42, 'bold'), text="Centered Label", bg=self.root.cget("bg"))
         self.time_label.place(relx=0.5, rely=0.5, anchor="center")
 
@@ -47,7 +49,6 @@ class PeeperApp:
         self.time_label.bind('<B1-Motion>', self.move_window)
         self.time_label.bind('<Button-1>', self.move_window)
 
-        self.last_update_second = 0
         self.update()
 
     def move_window(self, event):
@@ -55,7 +56,6 @@ class PeeperApp:
         x = max(0, event.x_root - self.size[0] // 2)
         y = max(0, event.y_root - self.size[1] // 2)
         self.root.geometry(f'{x:+}{y:+}')
-
 
     def update(self):
         dt = datetime.datetime.now()
@@ -91,8 +91,10 @@ class PeeperApp:
         ct = time.time_ns()
         ctm = ct // 1_000_000
         if self.last_update_second + 1 < ctm // 1000:
+            self.last_update_second = ctm // 1000
             self.root.after(100, self.update)
         else:
+            self.last_update_second = ctm // 1000
             self.root.after(1000 - (ctm % 1000), self.update)
 
 

@@ -46,7 +46,6 @@ class RectangleLayout(FloatLayout):
 
 
     def on_key_down(self, keyboard, keycode, text, modifiers):
-        print('bbbbbbbbbbbb', keycode, text, modifiers)
         if keycode[0] == 120:  # X key
             App.get_running_app().stop()
 
@@ -95,10 +94,9 @@ class RectangleApp(App):
             pos_hint={"center_x": 0.5, "center_y": 0.5},
         )
         self.ra.add_widget(self.time_label)
-
         self.sound = kivy.core.audio.audio_gstplayer.SoundGstplayer(source='/usr/share/sounds/freedesktop/stereo/service-login.oga')
-
         return self.ra
+
 
     def update(self, dt):
         dt = datetime.datetime.now()

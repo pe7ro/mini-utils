@@ -8,17 +8,17 @@ Peeper is a simple Python application that displays a digital clock along with C
 
 There are 3 implementations using different libraries, you can choose the one you prefer.
 
-- pygame:
+- pygame ⭐⭐⭐☆☆
   - cannot change the window position (dragging) and as a result it may be less convenient to move the window around
   - cannot set "always on top"
   - easiest audio support out of the box
-- pyglet
+- pyglet ⭐⭐⭐☆☆
   - reversed Y axis 
   - cpu usage seems to be the highest
   - smoothest window dragging out of 3
   - cannot set "always on top"
   - can play oga files wish some hacks (gstreamer) but does not see ffmpeg
-- kivy
+- kivy ⭐⭐⭐☆☆
   - reversed Y axis 
   - the most confusing wiki and architecture
   - lowest cpu usage
@@ -26,11 +26,15 @@ There are 3 implementations using different libraries, you can choose the one yo
   - needs absolute paths for fonts (?)
   - ESC closes the app by default but can be changed
   - freezes when given 'oga' file, but works ok if renamed to 'ogg'
-- tkinter (pyglet for audio)
+- tkinter (pyglet for audio) ⭐⭐⭐⭐☆
   - surprisingly straightforward to implement (maybe lacking documentation though)
   - smooth dragging
   - low cpu usage
-
+- pyqt5 ⭐⭐⭐⭐⭐
+  - meaningful mature architecture
+  - documentation mostly for C, but still quite helpful
+  - lowest cpu and ram usage
+  - smooth window dragging
 
 ## Features
 
@@ -43,7 +47,7 @@ There are 3 implementations using different libraries, you can choose the one yo
 
 - Python 3.6 or higher
 - Psutil library
-- Pygame / pyglet / kivy library
+- pygame / pyglet / kivy / pyqt5 library
 
 ## Installation
 
@@ -71,7 +75,7 @@ There are 3 implementations using different libraries, you can choose the one yo
 3. **Optional: Set Timezone Offset**:
    You can set a timezone offset in hours by passing it as an argument:
    ```sh
-   python3 peeper.py 2  # This will set the timezone to UTC+2
+   python3 peeper_pygame.py 2  # This will set the timezone to UTC+2
    ```
 
 ## Controls
